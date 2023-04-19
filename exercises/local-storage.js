@@ -38,3 +38,24 @@
  */
 
 // Your code goes here...
+
+localStorage.setItem("MyList", "Tom");
+const newItem = 'Jerry';
+let storageData = localStorage.getItem('MyList');
+storageData += `, ${newItem}`;
+localStorage.setItem("MyList", storageData);
+
+
+const changeColor = (e) => {
+  const item = e.target;
+  if(Array.from(item.classList).includes('card')) {
+    if(item.style.backgroundColor = 'white') {
+      item.style.backgroundColor = 'red';
+    } else {
+      (item.style.backgroundColor = 'white');
+    }
+  }
+};
+
+const container = document.querySelector('.cardsContainer');
+container.addEventListener('click', changeColor);
