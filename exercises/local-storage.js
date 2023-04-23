@@ -39,23 +39,73 @@
 
 // Your code goes here...
 
-localStorage.setItem("MyList", "Tom");
-const newItem = 'Jerry';
-let storageData = localStorage.getItem('MyList');
-storageData += `, ${newItem}`;
-localStorage.setItem("MyList", storageData);
+// Select the container by ID that holds all the items
+
+const container = document.querySelector('.cardsContainer')
+
+// Create a function that sets the background to be red for the item with an id listed in favorites LS
+const setColorById = () => {
+  let storageData = localStorage.getItem('Favorites');
+  if (storageData) {
+    let favoritesIds = storageData.split(',');
+    favoritesIds.forEach((itemId) => {
+      let itemElement = document.getElementById(itemId);
+      if (itemElement) {
+        itemElement.style.backgroundColor = 'red';
+      }
+    });
+  }
+};
+
+setColorById();
 
 
-const changeColor = (e) => {
+// Create a function that adds an id to favorites LS by id passed as an argument
+const addIdToFavorites = (id) => {
+  let storageData = localStorage.getItem('Favorites');
+  let favoritesIds = storageData ? JSON.parse(storageData) : [];
+  favoritesIds.push(id);
+  localStorage.setItem('Favorites', JSON.stringify(favoritesIds));
+}
+
+// Create a function that deletes an id from favorites LS by id passed as an argument
+const deleteIdFromFavorites = (id) => {
+  let storageData = localStorage.getItem('Favorites');
+  let favoritesIds = storageData ? JSON.parse(storageData) : [];
+  favoritesIds = favoritesIds.filter((itemId) => itemId !== id);
+  localStorage.setItem('Favorites', JSON.stringify(favoritesIds));
+}
+
+
+/* Create a callback function that updates the element background color and does the
+action with the item's id depending on if it is in LS or not. The function should
+do that to a specific item that has a specific class value
+add the event listener to the container, pass the callback. */
+
+const toggleColorAndFavorites = (e) => {
   const item = e.target;
-  if(Array.from(item.classList).includes('card')) {
-    if(item.style.backgroundColor = 'white') {
-      item.style.backgroundColor = 'red';
+  let storageData = localStorage.getItem('Favorites');
+  let favoritesIds = storageData ? JSON.parse(storageData) : [];
+
+  // Check if the clicked item has the specific class (e.g., 'card')
+  if (item.classList.contains('card')) {
+    // If the item's ID is in the localStorage
+    if (favoritesIds.includes(item.id)) {
+      // Remove the item's ID from the localStorage
+      deleteIdFromFavorites(item.id);
+
+      // Clear the background color
+      item.style.backgroundColor = '';
     } else {
-      (item.style.backgroundColor = 'white');
+      // Add the item's ID to the localStorage
+      addIdToFavorites(item.id);
+
+      // Set the background color to red
+      item.style.backgroundColor = 'red';
     }
   }
 };
 
-const container = document.querySelector('.cardsContainer');
-container.addEventListener('click', changeColor);
+container.addEventListener('click', toggleColorAndFavorites);
+
+// localStorage.clear();
