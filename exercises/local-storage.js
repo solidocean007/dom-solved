@@ -38,20 +38,16 @@
  */
 
 // Your code goes here...
+const container = document.querySelector(".cardsContainer");
 
-// Select the container by ID that holds all the items
-
-const container = document.querySelector('.cardsContainer')
-
-// Create a function that sets the background to be red for the item with an id listed in favorites LS
 const setColorById = () => {
-  let storageData = localStorage.getItem('Favorites');
+  let storageData = localStorage.getItem("Favorites");
   if (storageData) {
-    let favoritesIds = storageData.split(',');
+    let favoritesIds = JSON.parse(storageData);
     favoritesIds.forEach((itemId) => {
       let itemElement = document.getElementById(itemId);
       if (itemElement) {
-        itemElement.style.backgroundColor = 'red';
+        itemElement.style.backgroundColor = "red";
       }
     });
   }
@@ -59,23 +55,19 @@ const setColorById = () => {
 
 setColorById();
 
-
-// Create a function that adds an id to favorites LS by id passed as an argument
 const addIdToFavorites = (id) => {
-  let storageData = localStorage.getItem('Favorites');
+  let storageData = localStorage.getItem("Favorites");
   let favoritesIds = storageData ? JSON.parse(storageData) : [];
   favoritesIds.push(id);
-  localStorage.setItem('Favorites', JSON.stringify(favoritesIds));
-}
+  localStorage.setItem("Favorites", JSON.stringify(favoritesIds));
+};
 
-// Create a function that deletes an id from favorites LS by id passed as an argument
 const deleteIdFromFavorites = (id) => {
-  let storageData = localStorage.getItem('Favorites');
+  let storageData = localStorage.getItem("Favorites");
   let favoritesIds = storageData ? JSON.parse(storageData) : [];
   favoritesIds = favoritesIds.filter((itemId) => itemId !== id);
-  localStorage.setItem('Favorites', JSON.stringify(favoritesIds));
-}
-
+  localStorage.setItem("Favorites", JSON.stringify(favoritesIds));
+};
 
 /* Create a callback function that updates the element background color and does the
 action with the item's id depending on if it is in LS or not. The function should
@@ -84,28 +76,20 @@ add the event listener to the container, pass the callback. */
 
 const toggleColorAndFavorites = (e) => {
   const item = e.target;
-  let storageData = localStorage.getItem('Favorites');
+  let storageData = localStorage.getItem("Favorites");
   let favoritesIds = storageData ? JSON.parse(storageData) : [];
 
-  // Check if the clicked item has the specific class (e.g., 'card')
-  if (item.classList.contains('card')) {
-    // If the item's ID is in the localStorage
+  if (item.classList.contains("card")) {
     if (favoritesIds.includes(item.id)) {
-      // Remove the item's ID from the localStorage
       deleteIdFromFavorites(item.id);
-
-      // Clear the background color
-      item.style.backgroundColor = '';
+      item.style.backgroundColor = "";
     } else {
-      // Add the item's ID to the localStorage
       addIdToFavorites(item.id);
-
-      // Set the background color to red
-      item.style.backgroundColor = 'red';
+      item.style.backgroundColor = "red";
     }
   }
+  storageData = localStorage.getItem("Favorites");
+  favoritesIds = storageData ? JSON.parse(storageData) : [];
 };
 
-container.addEventListener('click', toggleColorAndFavorites);
-
-// localStorage.clear();
+container.addEventListener("click", toggleColorAndFavorites);
